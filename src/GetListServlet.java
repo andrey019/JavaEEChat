@@ -4,6 +4,7 @@ import Client.Message;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +28,20 @@ public class GetListServlet extends HttpServlet {
 //			os.write(json.getBytes());
 //		}
 
-        ArrayList<Message> messages = msgList.serialize(from);
+		String stringMessages = msgList.toJSON(from);
+        if (stringMessages != null) {
+            PrintWriter printWriter = new PrintWriter(resp.getOutputStream());
+            printWriter.write(stringMessages);
+            printWriter.flush();
+            printWriter.close();
+        }
 
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(resp.getOutputStream());
-            objectOutputStream.writeObject(messages);
-            objectOutputStream.flush();
-            objectOutputStream.close();
+//        ArrayList<Message> messages = msgList.serialize(from);
+//
+//            ObjectOutputStream objectOutputStream = new ObjectOutputStream(resp.getOutputStream());
+//            objectOutputStream.writeObject(messages);
+//            objectOutputStream.flush();
+//            objectOutputStream.close();
 
 	}
 }

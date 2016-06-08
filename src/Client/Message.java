@@ -50,20 +50,27 @@ public class Message implements Serializable {
 		conn.setRequestMethod("POST");
 		conn.setDoOutput(true);
 	
-		OutputStream os = conn.getOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(os);
+//		OutputStream os = conn.getOutputStream();
+        //ObjectOutputStream objectOutputStream = new ObjectOutputStream(os);
+        PrintWriter printWriter = new PrintWriter(conn.getOutputStream());
 		try {
 			String json = toJSON();
 //			os.write(json.getBytes());
 //            os.flush();
-            objectOutputStream.writeObject(this);
-            objectOutputStream.flush();
+
+			printWriter.write(json);
+            printWriter.flush();
+            printWriter.close();
+
+
+//            objectOutputStream.writeObject(this);
+//            objectOutputStream.flush();
 
 			
 			return conn.getResponseCode();
 		} finally {
 			//os.close();
-            objectOutputStream.close();
+            //objectOutputStream.close();
 		}
 	}
 	
