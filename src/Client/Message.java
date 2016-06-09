@@ -26,16 +26,6 @@ public class Message implements Serializable {
 		return gson.fromJson(s, Message.class);
 	}
 
-    public static Message deserialize(InputStream is) {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(is);
-            return (Message) objectInputStream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-	
 	@Override
 	public String toString() {
 		return new StringBuilder().append("[").append(date.toString())
@@ -50,27 +40,16 @@ public class Message implements Serializable {
 		conn.setRequestMethod("POST");
 		conn.setDoOutput(true);
 	
-//		OutputStream os = conn.getOutputStream();
-        //ObjectOutputStream objectOutputStream = new ObjectOutputStream(os);
-        PrintWriter printWriter = new PrintWriter(conn.getOutputStream());
+		OutputStream os = conn.getOutputStream();
+
 		try {
 			String json = toJSON();
-//			os.write(json.getBytes());
-//            os.flush();
+			os.write(json.getBytes());
+            os.flush();
 
-			printWriter.write(json);
-            printWriter.flush();
-            printWriter.close();
-
-
-//            objectOutputStream.writeObject(this);
-//            objectOutputStream.flush();
-
-			
 			return conn.getResponseCode();
 		} finally {
-			//os.close();
-            //objectOutputStream.close();
+			os.close();
 		}
 	}
 	

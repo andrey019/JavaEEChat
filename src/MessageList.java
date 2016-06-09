@@ -16,7 +16,7 @@ public class MessageList {
 		return msgList;
 	}
   
-  private MessageList() {}
+  	private MessageList() {}
 	
 	public synchronized void add(Message m) {
 		list.add(m);
@@ -33,12 +33,4 @@ public class MessageList {
 		} else
 			return null;
 	}
-
-	public synchronized ArrayList<Message> serialize(int n) {
-        ArrayList<Message> messages = new ArrayList<>();
-        for (int i = n; i < list.size(); i++) {
-            messages.add(list.get(i));
-        }
-        return messages;
-    }
 }

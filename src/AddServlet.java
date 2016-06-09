@@ -1,6 +1,5 @@
 
 import Client.Message;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,23 +15,14 @@ public class AddServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException 
 	{
-//		InputStream is = req.getInputStream();
-//        byte[] buf = new byte[req.getContentLength()];
-//        is.read(buf);
-//
-//		Message msg = Message.fromJSON(new String(buf));
+		InputStream is = req.getInputStream();
+        byte[] buf = new byte[req.getContentLength()];
+        is.read(buf);
 
-        //Message msg = Message.deserialize(req.getInputStream());
-
-
-
-
-		Message msg = Message.fromJSON(IOUtils.toString(req.getInputStream(), "UTF-8"));
-
+		Message msg = Message.fromJSON(new String(buf));
 
 		if (msg != null) {
             msgList.add(msg);
-            resp.setStatus(200);
         } else {
             resp.setStatus(400); // Bad request
         }
