@@ -22,6 +22,15 @@
         <url-pattern>/add</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Reg</servlet-name>
+        <servlet-class>RegServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Reg</servlet-name>
+        <url-pattern>/reg</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

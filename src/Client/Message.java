@@ -15,6 +15,7 @@ public class Message implements Serializable {
 	private String from;
 	private String to;
 	private String text;
+	private String access;
 	
 	public String toJSON() {
         Gson gson = new GsonBuilder().create();
@@ -83,5 +84,13 @@ public class Message implements Serializable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getAccess() {
+		return access;
+	}
+
+	public void setAccess(String access) {
+		this.access = access;
 	}
 }
