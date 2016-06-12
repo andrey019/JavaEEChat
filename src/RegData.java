@@ -4,9 +4,13 @@ public final class RegData {
     private static ConcurrentHashMap<String, String> users = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, Long> lastActivity = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, String> accessCode = new ConcurrentHashMap<>();
-    private static final long MAX_TIME_OUT = 1800000;   // 30 min
+    private static final BackUpHandler backUpHandler = new BackUpHandler();
+    private static final RegDataCleanUp regDataCleanUp = new RegDataCleanUp();
 
-    private RegData() {}
+    private RegData() {
+        backUpHandler.start();
+        regDataCleanUp.start();
+    }
 
     public static ConcurrentHashMap<String, String> getUsers() {
         return users;
@@ -20,7 +24,7 @@ public final class RegData {
         return accessCode;
     }
 
-    public static long getMaxTimeOut() {
-        return MAX_TIME_OUT;
+    public static void setUsers(ConcurrentHashMap<String, String> users) {
+        RegData.users = users;
     }
 }

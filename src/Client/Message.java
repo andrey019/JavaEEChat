@@ -16,6 +16,8 @@ public class Message implements Serializable {
 	private String to;
 	private String text;
 	private String access;
+	private int number;
+    private boolean chatRoom;
 	
 	public String toJSON() {
         Gson gson = new GsonBuilder().create();
@@ -93,4 +95,20 @@ public class Message implements Serializable {
 	public void setAccess(String access) {
 		this.access = access;
 	}
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public boolean isChatroom() {
+        return chatRoom;
+    }
+
+    public void setChatroom(boolean chatroom) {
+        this.chatRoom = chatroom;
+    }
 }

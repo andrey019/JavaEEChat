@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Random;
 
 public class RegServlet extends HttpServlet {
-    private static RegDataCleanUp regDataCleanUp = new RegDataCleanUp();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -16,30 +15,19 @@ public class RegServlet extends HttpServlet {
     }
 
     private void process(String buffer, HttpServletResponse resp) throws IOException {
-        String[] incoming = new String(buffer).split(" ");  // login password
-        if (incoming != null) {
-            if (incoming.length == 2) {
-                if (RegData.getUsers().containsKey(incoming[0])) {
-                    if (RegData.getUsers().get(incoming[0]).equalsIgnoreCase(incoming[1])) {
-                        Random random = new Random();
-                        String access = Long.toString(random.nextLong());
-                        RegData.getAccessCode().put(incoming[0], access);
-                        RegData.getLastActivity().put(incoming[0], System.currentTimeMillis());
-                        resp.getWriter().write(access);
-                        resp.getWriter().flush();
-                        resp.setStatus(200);
+        String[] loginPassword = new String(buffer).split(" ");
+        if (loginPassword != null) {
+            if (loginPassword.length == 2) {
+                if (RegData.getUsers().containsKey(loginPassword[0])) {
+                    if (RegData.getUsers().get(loginPassword[0]).equalsIgnoreCase(loginPassword[1])) {
+                        authorization(loginPassword, resp);
                     } else {
                         resp.setStatus(401);    // unauthorized
                     }
+                } else if (!loginPassword[0].equalsIgnoreCase("all") && !loginPassword[0].equalsIgnoreCase("online")) {
+                    registration(loginPassword, resp);
                 } else {
-                    RegData.getUsers().put(incoming[0], incoming[1]);
-                    Random random = new Random();
-                    String access = Long.toString(random.nextLong());
-                    RegData.getAccessCode().put(incoming[0], access);
-                    RegData.getLastActivity().put(incoming[0], System.currentTimeMillis());
-                    resp.getWriter().write(access);
-                    resp.getWriter().flush();
-                    resp.setStatus(200);
+                    resp.setStatus(400);
                 }
             } else {
                 resp.setStatus(400);
@@ -47,5 +35,24 @@ public class RegServlet extends HttpServlet {
         } else {
             resp.setStatus(400);
         }
+    }
+    
+    private void authorization(String[] loginPassword, HttpServletResponse resp) throws IOException {
+        Random random = new Random();
+        String access = Long.toString(random.nextLong());
+        RegData.getAccessCode().put(loginPassword[0], access);
+        RegData.getLastActivity().put(loginPassword[0], System.currentTimeMillis());
+        resp.getWriter().write(access);
+        resp.getWriter().flush();
+    }
+    
+    private void registration(String[] loginPassword, HttpServletResponse resp) throws IOException {
+        RegData.getUsers().put(loginPassword[0], loginPassword[1]);
+        Random random = new Random();
+        String access = Long.toString(random.nextLong());
+        RegData.getAccessCode().put(loginPassword[0], access);
+        RegData.getLastActivity().put(loginPassword[0], System.currentTimeMillis());
+        resp.getWriter().write(access);
+        resp.getWriter().flush();
     }
 }

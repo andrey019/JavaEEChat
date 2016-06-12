@@ -12,5 +12,6 @@
   </head>
   <body>
   ChatEE
+  Only console version is supported!
   </body>
 </html>

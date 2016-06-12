@@ -31,6 +31,24 @@
         <url-pattern>/reg</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>LogOutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetStatus</servlet-name>
+        <servlet-class>GetStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetStatus</servlet-name>
+        <url-pattern>/status</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

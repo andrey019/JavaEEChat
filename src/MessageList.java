@@ -1,7 +1,4 @@
-
 import java.util.ArrayList;
-import java.util.List;
-
 import Client.Message;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,8 +7,8 @@ public class MessageList {
 	
 	private static final MessageList msgList = new MessageList();
 
-	private final List<Message> list = new ArrayList<Message>();
-	
+	private final ArrayList<Message> list = new ArrayList<>();
+
 	public static MessageList getInstance() {
 		return msgList;
 	}
@@ -21,12 +18,20 @@ public class MessageList {
 	public synchronized void add(Message m) {
 		list.add(m);
 	}
+
+    public synchronized int getSize() {
+        return list.size();
+    }
 	
-	public synchronized String toJSON(int n) {
-		List<Message> res = new ArrayList<Message>();
-		for (int i = n; i < list.size(); i++)
-			res.add(list.get(i));
-		
+	public synchronized String toJSON(int n, String to) {
+		ArrayList<Message> res = new ArrayList<>();
+		for (int i = n; i < list.size(); i++) {
+			if (list.get(i).getTo().equalsIgnoreCase(to) || list.get(i).getTo().equalsIgnoreCase("all") ||
+                    list.get(i).getFrom().equalsIgnoreCase(to)) {
+                res.add(list.get(i));
+            }
+		}
+
 		if (res.size() > 0) {
 			Gson gson = new GsonBuilder().create();
 			return gson.toJson(res.toArray());

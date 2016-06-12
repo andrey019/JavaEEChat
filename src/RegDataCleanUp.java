@@ -1,6 +1,9 @@
 import java.util.Map;
 
-public class RegDataCleanUp extends Thread {
+public final class RegDataCleanUp extends Thread {
+
+    private static final long MAX_TIME_OUT = 1800000;   // 30 min
+
     public RegDataCleanUp() {
         this.start();
     }
@@ -12,9 +15,9 @@ public class RegDataCleanUp extends Thread {
             try {
                 if (!RegData.getLastActivity().isEmpty()) {
                     for (Map.Entry<String, Long> entry : RegData.getLastActivity().entrySet()) {
-                        if ( (System.currentTimeMillis() - entry.getValue()) > RegData.getMaxTimeOut() ) {
-                            RegData.getLastActivity().put(entry.getKey(), zero);
-                            RegData.getAccessCode().put(entry.getKey(), "");
+                        if ( (System.currentTimeMillis() - entry.getValue()) > MAX_TIME_OUT ) {
+                            RegData.getLastActivity().remove(entry.getKey());
+                            RegData.getAccessCode().remove(entry.getKey());
                         }
                     }
                 }

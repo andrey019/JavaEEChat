@@ -3,6 +3,7 @@ import Client.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SyncFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,10 @@ public class AddServlet extends HttpServlet {
 		if (msg != null) {
 			if (RegData.getAccessCode().containsKey(msg.getFrom())) {
 				if (RegData.getAccessCode().get(msg.getFrom()).equalsIgnoreCase(msg.getAccess())) {
+					msg.setAccess("");
+					msg.setNumber(msgList.getSize());
 					msgList.add(msg);
+					RegData.getLastActivity().put(msg.getFrom(), System.currentTimeMillis());
 				} else {
 					resp.setStatus(401);
 				}
