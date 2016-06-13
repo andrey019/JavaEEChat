@@ -5,6 +5,7 @@ public final class BackUpHandler extends Thread {
 
     private static final String USERS_PATH = "c:\\temp\\users.dbs";
     private static final String USERS_PATH_BAK = "c:\\temp\\users.dbs.bak";
+    private static boolean usersRestored;
     private static long usersAmount;
 
     public BackUpHandler() {
@@ -14,6 +15,7 @@ public final class BackUpHandler extends Thread {
     @Override
     public void run() {
         restoreUsers();
+        usersRestored = true;
 
         while (!isInterrupted()) {
             makeUsersBackup();
@@ -100,4 +102,7 @@ public final class BackUpHandler extends Thread {
         return false;
     }
 
+    public static boolean isUsersRestored() {
+        return usersRestored;
+    }
 }

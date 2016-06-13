@@ -7,10 +7,7 @@ public final class RegData {
     private static final BackUpHandler backUpHandler = new BackUpHandler();
     private static final RegDataCleanUp regDataCleanUp = new RegDataCleanUp();
 
-    private RegData() {
-        backUpHandler.start();
-        regDataCleanUp.start();
-    }
+    private RegData() {}
 
     public static ConcurrentHashMap<String, String> getUsers() {
         return users;

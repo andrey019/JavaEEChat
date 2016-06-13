@@ -14,9 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		try {
-            System.out.println("Instructions:");
-            System.out.println("To send private message use this example - username@@@text");
-            System.out.println();
+            instructionsOnScreen();
 			while (!registration(scanner)) {}
 			System.out.println("Access granted");
 	
@@ -31,6 +29,16 @@ public class Main {
 			scanner.close();
 		}
 	}
+
+    private static void instructionsOnScreen() {
+        System.out.println("Instructions:");
+        System.out.println("To send public message just type in your text");
+        System.out.println("To send private message use this example - username@@@text");
+        System.out.println("To get list of all users type in urersall@@@");
+        System.out.println("To get list of online users type in usersonline@@@");
+        System.out.println("To get user status use this example - status@@@username");
+        System.out.println();
+    }
 
     private static void startChatting(Scanner scanner) {
         while (true) {
