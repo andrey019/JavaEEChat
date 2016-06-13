@@ -14,10 +14,10 @@ public class GetStatusServlet extends HttpServlet {
                 sendAllUsers(resp);
             } else if (parameter.equalsIgnoreCase("usersonline")) {
                 sendOnlineUsers(resp);
-            } else if (parameter.equalsIgnoreCase("roomall")) {
-                //
-            } else if (parameter.equalsIgnoreCase("roomonline")) {
-                //
+            } else if (parameter.contains("roomall")) {
+                sendRoomUsers(resp, parameter, false);
+            } else if (parameter.contains("roomonline")) {
+                sendRoomUsers(resp, parameter, true);
             } else {
                 sendUserStatus(resp, parameter);
             }
@@ -53,6 +53,37 @@ public class GetStatusServlet extends HttpServlet {
                 resp.getWriter().write(user + "=offline");
                 resp.getWriter().flush();
             }
+        } else {
+            resp.setStatus(400);
+        }
+    }
+
+    private void sendRoomUsers(HttpServletResponse resp, String roomRequest, boolean onlyOnline) throws IOException {
+        String[] roomName = roomRequest.split("@");
+        if (roomName.length != 2) {
+            resp.setStatus(400);
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        if (RegData.getRooms().containsKey(roomName[1])) {
+            if (onlyOnline) {
+                for (String user : RegData.getRooms().get(roomName[1])) {
+                    if (RegData.getLastActivity().containsKey(user)) {
+                        stringBuilder.append(user);
+                        stringBuilder.append(" ");
+                    }
+                }
+            } else {
+                for (String user : RegData.getRooms().get(roomName[1])) {
+                    stringBuilder.append(user);
+                    stringBuilder.append(" ");
+                }
+            }
+            if (stringBuilder.length() < 1) {
+                stringBuilder.append("empty");
+            }
+            resp.getWriter().write(stringBuilder.toString());
+            resp.getWriter().flush();
         } else {
             resp.setStatus(400);
         }

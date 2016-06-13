@@ -3,7 +3,6 @@ import Client.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.SyncFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

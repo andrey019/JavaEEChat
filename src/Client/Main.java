@@ -38,6 +38,9 @@ public class Main {
         System.out.println("To get list of all users type in urersall@@@");
         System.out.println("To get list of online users type in usersonline@@@");
         System.out.println("To get user status use this example - status@@@username");
+        System.out.println("To create chatroom use this example - chatroom@@@roomname username1 username2 username3...");
+        System.out.println("To get list of chatroom users type in roomall@@@roomname");
+        System.out.println("To get list of online chatroom users type in roomonline@@@roomname");
         System.out.println("To logout just hit enter button");
         System.out.println();
     }
@@ -70,26 +73,32 @@ public class Main {
     private static Message processInput(String input) {
         if (input.contains("@@@")) {
             String[] splittedInput = input.split("@@@");
-            if (splittedInput[0].equalsIgnoreCase("chatroom")) {
-                if (splittedInput.length == 2) {
-                    chatRoomRegistration(splittedInput[1]);
-                } else {
-                    System.out.println("Wrong command!");
-                }
-            } else if (splittedInput[0].equalsIgnoreCase("status")) {
-                if (splittedInput.length == 2) {
-                    getUsersStatus(splittedInput[1]);
-                }
-            } else if (splittedInput[0].equalsIgnoreCase("usersall")) {
-                getUsersStatus(splittedInput[0]);
-            } else if (splittedInput[0].equalsIgnoreCase("usersonline")) {
-                getUsersStatus(splittedInput[0]);
-            } else {
-                if (splittedInput.length == 2) {
-                    return privateMessage(splittedInput[0], splittedInput[1]);
-                } else {
-                    System.out.println("Message is empty!");
-                }
+            switch (splittedInput[0]) {
+                case "chatroom":
+                    caseChatroom(splittedInput);
+                    break;
+                case "status":
+                    caseStatus(splittedInput);
+                    break;
+                case "usersall":
+                    getUsersStatus(splittedInput[0]);
+                    break;
+                case "usersonline":
+                    getUsersStatus(splittedInput[0]);
+                    break;
+                case "roomall":
+                    caseRoomAllOrOnline(splittedInput);
+                    break;
+                case "roomonline":
+                    caseRoomAllOrOnline(splittedInput);
+                    break;
+                default:
+                    if (splittedInput.length == 2) {
+                        return privateMessage(splittedInput[0], splittedInput[1]);
+                    } else {
+                        System.out.println("Message is empty!");
+                    }
+                    break;
             }
         } else {
             return publicMessage(input);
@@ -97,15 +106,43 @@ public class Main {
         return null;
     }
 
+    private static void caseChatroom(String[] splittedInput) {
+        if (splittedInput.length == 2) {
+            chatRoomRegistration(splittedInput[1]);
+        } else {
+            System.out.println("Wrong command!");
+        }
+    }
+
+    private static void caseStatus(String[] splittedInput) {
+        if (splittedInput.length == 2) {
+            getUsersStatus(splittedInput[1]);
+        } else {
+            System.out.println("Wrong command!");
+        }
+    }
+
+    private static void caseRoomAllOrOnline(String[] splittedInput) {
+        if (splittedInput.length == 2) {
+            getUsersStatus(splittedInput[0] + "@" + splittedInput[1]);
+        } else {
+            System.out.println("Wrong command!");
+        }
+    }
+
     private static void chatRoomRegistration(String roomName) {
         String[] roomNameUsers = roomName.split(" ");
         StringBuilder roomNameAndUsers = new StringBuilder();
+        ArrayList<String> users = new ArrayList<>();
         if ( (roomNameUsers != null) && (roomNameUsers.length > 1) ) {
             for (int i = 0; i < roomNameUsers.length; i++) {
+                users.add(roomNameUsers[i]);
                 roomNameAndUsers.append(roomNameUsers[i]);
                 roomNameAndUsers.append(" ");
             }
-            roomNameAndUsers.append(login);
+            if (!users.contains(login)) {
+                roomNameAndUsers.append(login);
+            }
         }
         if (roomRegSend(roomNameAndUsers)) {
             System.out.println("Chatroom '" + roomNameUsers[0] + "' is created");
@@ -202,7 +239,6 @@ public class Main {
 			}
 			URL obj = new URL("http://localhost:8080/reg");
 			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-
 			if (regSend(input, conn) && regReceive(conn)) {
 				String[] loginPass = input.split(" ");
 				login = loginPass[0];
