@@ -14,6 +14,10 @@ public class GetStatusServlet extends HttpServlet {
                 sendAllUsers(resp);
             } else if (parameter.equalsIgnoreCase("usersonline")) {
                 sendOnlineUsers(resp);
+            } else if (parameter.equalsIgnoreCase("roomall")) {
+                //
+            } else if (parameter.equalsIgnoreCase("roomonline")) {
+                //
             } else {
                 sendUserStatus(resp, parameter);
             }

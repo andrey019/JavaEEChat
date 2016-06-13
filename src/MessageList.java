@@ -26,8 +26,8 @@ public class MessageList {
 	public synchronized String toJSON(int n, String to) {
 		ArrayList<Message> res = new ArrayList<>();
 		for (int i = n; i < list.size(); i++) {
-			if (list.get(i).getTo().equalsIgnoreCase(to) || list.get(i).getTo().equalsIgnoreCase("all") ||
-                    list.get(i).getFrom().equalsIgnoreCase(to)) {
+			if ( list.get(i).getTo().equalsIgnoreCase(to) || list.get(i).getTo().equalsIgnoreCase("all") ||
+                    list.get(i).getFrom().equalsIgnoreCase(to) || belongsToRoom(list.get(i), to)) {
                 res.add(list.get(i));
             }
 		}
@@ -38,4 +38,13 @@ public class MessageList {
 		} else
 			return null;
 	}
+
+	private boolean belongsToRoom(Message message, String to) {
+        if (RegData.getRooms().containsKey(message.getTo())) {
+            if (RegData.getRooms().get(message.getTo()).contains(to)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

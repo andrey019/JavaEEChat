@@ -49,6 +49,15 @@
         <url-pattern>/status</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RegRoom</servlet-name>
+        <servlet-class>RoomRegServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegRoom</servlet-name>
+        <url-pattern>/regroom</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

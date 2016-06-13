@@ -24,7 +24,9 @@ public class RegServlet extends HttpServlet {
                     } else {
                         resp.setStatus(401);    // unauthorized
                     }
-                } else if (!loginPassword[0].equalsIgnoreCase("all") && !loginPassword[0].equalsIgnoreCase("online")) {
+                } else if (!loginPassword[0].equalsIgnoreCase("usersall") &&
+                        !loginPassword[0].equalsIgnoreCase("usersonline") &&
+                        !RegData.getRooms().containsKey(loginPassword[0])) {
                     registration(loginPassword, resp);
                 } else {
                     resp.setStatus(400);

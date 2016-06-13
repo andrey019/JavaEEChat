@@ -17,24 +17,40 @@ public class AddServlet extends HttpServlet {
 		InputStream is = req.getInputStream();
         byte[] buf = new byte[req.getContentLength()];
         is.read(buf);
-
 		Message msg = Message.fromJSON(new String(buf));
+        process(msg, resp);
+	}
 
-		if (msg != null) {
-			if (RegData.getAccessCode().containsKey(msg.getFrom())) {
-				if (RegData.getAccessCode().get(msg.getFrom()).equalsIgnoreCase(msg.getAccess())) {
-					msg.setAccess("");
-					msg.setNumber(msgList.getSize());
-					msgList.add(msg);
-					RegData.getLastActivity().put(msg.getFrom(), System.currentTimeMillis());
-				} else {
-					resp.setStatus(401);
-				}
-			} else {
-				resp.setStatus(401);
-			}
+	private void process(Message msg, HttpServletResponse resp) {
+        if (msg != null) {
+            if (RegData.getAccessCode().containsKey(msg.getFrom())) {
+                if (RegData.getAccessCode().get(msg.getFrom()).equalsIgnoreCase(msg.getAccess())) {
+                    if (RegData.getRooms().containsKey(msg.getTo())) {
+                        if (RegData.getRooms().get(msg.getTo()).contains(msg.getFrom())) {
+                            addMessage(msg);
+                        } else {
+                            resp.setStatus(401);
+                        }
+                    } else {
+                        if (RegData.getUsers().containsKey(msg.getTo()) || msg.getTo().equalsIgnoreCase("all")) {
+                            addMessage(msg);
+                        }
+                    }
+                } else {
+                    resp.setStatus(401);
+                }
+            } else {
+                resp.setStatus(401);
+            }
         } else {
             resp.setStatus(400); // Bad request
         }
-	}
+    }
+
+    private void addMessage(Message msg) {
+        msg.setAccess("");
+        msg.setNumber(msgList.getSize());
+        msgList.add(msg);
+        RegData.getLastActivity().put(msg.getFrom(), System.currentTimeMillis());
+    }
 }

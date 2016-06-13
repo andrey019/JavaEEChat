@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -17,7 +18,7 @@ public class Main {
             instructionsOnScreen();
 			while (!registration(scanner)) {}
 			System.out.println("Access granted");
-	
+
 			GetThread th = new GetThread();
             th.setLogin(login);
             th.setAccess(access);
@@ -37,6 +38,7 @@ public class Main {
         System.out.println("To get list of all users type in urersall@@@");
         System.out.println("To get list of online users type in usersonline@@@");
         System.out.println("To get user status use this example - status@@@username");
+        System.out.println("To logout just hit enter button");
         System.out.println();
     }
 
@@ -51,7 +53,9 @@ public class Main {
             if (message != null) {
                 try {
                     int res = message.send("http://localhost:8080/add");
-                    if (res != 200) {
+                    if (res == 401) {
+                        System.out.println("Access denied!");
+                    } else if (res != 200) {
                         System.out.println("HTTP error: " + res);
                         return;
                     }
@@ -67,9 +71,15 @@ public class Main {
         if (input.contains("@@@")) {
             String[] splittedInput = input.split("@@@");
             if (splittedInput[0].equalsIgnoreCase("chatroom")) {
-                // chat-room creating
+                if (splittedInput.length == 2) {
+                    chatRoomRegistration(splittedInput[1]);
+                } else {
+                    System.out.println("Wrong command!");
+                }
             } else if (splittedInput[0].equalsIgnoreCase("status")) {
-                getUsersStatus(splittedInput[1]);
+                if (splittedInput.length == 2) {
+                    getUsersStatus(splittedInput[1]);
+                }
             } else if (splittedInput[0].equalsIgnoreCase("usersall")) {
                 getUsersStatus(splittedInput[0]);
             } else if (splittedInput[0].equalsIgnoreCase("usersonline")) {
@@ -85,6 +95,39 @@ public class Main {
             return publicMessage(input);
         }
         return null;
+    }
+
+    private static void chatRoomRegistration(String roomName) {
+        String[] roomNameUsers = roomName.split(" ");
+        StringBuilder roomNameAndUsers = new StringBuilder();
+        if ( (roomNameUsers != null) && (roomNameUsers.length > 1) ) {
+            for (int i = 0; i < roomNameUsers.length; i++) {
+                roomNameAndUsers.append(roomNameUsers[i]);
+                roomNameAndUsers.append(" ");
+            }
+            roomNameAndUsers.append(login);
+        }
+        if (roomRegSend(roomNameAndUsers)) {
+            System.out.println("Chatroom '" + roomNameUsers[0] + "' is created");
+        }
+    }
+
+    private static boolean roomRegSend(StringBuilder roomNameAndUsers) {
+        try {
+            URL obj = new URL("http://localhost:8080/regroom");
+            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+            conn.setDoOutput(true);
+
+            conn.getOutputStream().write(roomNameAndUsers.toString().getBytes());
+            conn.getOutputStream().flush();
+            conn.getOutputStream().close();
+            if (conn.getResponseCode() == 200) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static void getUsersStatus(String parameter) {
@@ -174,9 +217,7 @@ public class Main {
 
 	private static boolean regSend(String input, HttpURLConnection conn) {
 		try {
-			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
-
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
 			os.flush();
