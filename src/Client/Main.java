@@ -34,11 +34,12 @@ public class Main {
     private static void instructionsOnScreen() {
         System.out.println("Instructions:");
         System.out.println("To send public message just type in your text");
-        System.out.println("To send private message use this example - username@@@text");
+        System.out.println("To send private message type in username@@@text");
+        System.out.println("To send chatroom message type in roomname@@@text");
         System.out.println("To get list of all users type in urersall@@@");
         System.out.println("To get list of online users type in usersonline@@@");
-        System.out.println("To get user status use this example - status@@@username");
-        System.out.println("To create chatroom use this example - chatroom@@@roomname username1 username2 username3...");
+        System.out.println("To get user status type in status@@@username");
+        System.out.println("To create chatroom type in chatroom@@@roomname username1 username2 username3...");
         System.out.println("To get list of chatroom users type in roomall@@@roomname");
         System.out.println("To get list of online chatroom users type in roomonline@@@roomname");
         System.out.println("To logout just hit enter button");
